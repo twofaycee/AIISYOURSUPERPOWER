@@ -1,3 +1,4 @@
+import {notFound} from 'next/navigation'
 import LessonClient from './lesson-client'
 
 type Lesson={title:string;module:string;lead:string;principle:string;examples:string[];exercise:string;challenge:string;check:string;answer:string;milestone:string;next?:string;quote?:string;quoteBy?:string;trap?:string}
@@ -61,4 +62,4 @@ const custom:Record<string,Partial<Lesson>>={
 }
 const data:Record<string,Lesson>={}
 all.forEach((x,i)=>{const d=buildLesson(x.title,x.module,i);data[slug(x.title)]={...d,...(custom[slug(x.title)]||{})}})
-export default function LessonPage({params}:{params:{slug:string}}){const d=data[params.slug]||{title:'Lesson not found',module:'COURSE',lead:'Return to the curriculum and choose a lesson.',principle:'Build before you browse.',examples:['Choose a lesson from the curriculum.','Your progress is saved in this browser.'],exercise:'Complete the selected lesson.',challenge:'Take one concrete action.',check:'What comes next?',answer:'Return to the curriculum.',milestone:'Keep moving.'};return <LessonClient slug={params.slug} data={d}/>}
+export default function LessonPage({params}:{params:{slug:string}}){const d=data[params.slug];if(!d)notFound();return <LessonClient slug={params.slug} data={d}/>}
