@@ -1,6 +1,6 @@
 import LessonClient from './lesson-client'
 
-type Lesson={title:string;module:string;lead:string;principle:string;examples:string[];exercise:string;challenge:string;check:string;answer:string;milestone:string;next?:string}
+type Lesson={title:string;module:string;lead:string;principle:string;examples:string[];exercise:string;challenge:string;check:string;answer:string;milestone:string;next?:string;quote?:string;quoteBy?:string;trap?:string}
 
 const modules:[string,string,string[]][]=[
 ['01','THE MINDSET',['Money follows value','Income vs. wealth','Skills vs. shortcuts','Why people pay','Finding expensive problems','Opportunity vs. hype','The 10-problem challenge']],
@@ -24,10 +24,21 @@ const moduleAdvice:Record<string,string>={
 '07':'Growth magnifies whatever is already there. Know your economics, protect quality and scale only what works.',
 '08':'The business reflects the operator. Build discipline, reputation, patience and the ability to learn from reality.'
 }
+const moduleQuotes:Record<string,{q:string;by:string}>={
+'01':{q:'Price is what you pay. Value is what you get.',by:'Warren Buffett'},
+'02':{q:'The important thing is not to stop questioning.',by:'Albert Einstein'},
+'03':{q:'Your job isn’t to ask why. Your job is to ask why not.',by:'Jeff Bezos'},
+'04':{q:'If you do build a great experience, customers tell each other about that.',by:'Jeff Bezos'},
+'05':{q:'Your brand is what other people say about you when you’re not in the room.',by:'Jeff Bezos'},
+'06':{q:'We need to accept that we won’t always make the right decisions, that we’ll screw up royally sometimes—but understand failure is not the opposite of success, it’s part of success.',by:'Arianna Huffington'},
+'07':{q:'If you double the number of experiments you do per year you’re going to double your inventiveness.',by:'Jeff Bezos'},
+'08':{q:'If you do what you’ve always done, you’ll get what you’ve always gotten.',by:'Tony Robbins'}
+};
 function buildLesson(title:string,module:string,index:number):Lesson{
  const num=module.split(' ')[0]
  const lower=title.toLowerCase()
  const principle=moduleAdvice[num]||'Make the work concrete, test it in reality and let evidence change your mind.'
+ const quote=moduleQuotes[num]
  const isAI=num==='02',isSales=num==='05',isBuild=num==='04',isScale=num==='07',isMind=num==='01'
  let exercise=''
  if(isAI) exercise='Open your current AI tool and run a small test related to "'+title+'". Record the input, output, what was useful, what was wrong or uncertain, and what you changed on the second attempt.'
@@ -36,7 +47,8 @@ function buildLesson(title:string,module:string,index:number):Lesson{
  else if(isScale) exercise='Take one repeated part of your business plan and document its inputs, steps, owner, time required, quality standard and measurable output. Identify the first constraint you would fix before adding volume.'
  else if(isMind) exercise='Write three concrete observations connected to '+lower+'. For each, name the person affected, the cost, the current workaround, and the evidence you have versus what you are assuming.'
  else exercise='Create a one-page working note for '+lower+'. Define the objective, people involved, current process, desired outcome, biggest unknown and next experiment.'
- return {title,module,lead:'This lesson is designed to move you from knowing a concept to using it. '+principle,principle,examples:['A weak approach treats '+lower+' as an idea to admire. A strong approach turns it into a decision, artifact or experiment.','If the first attempt fails, that is information. Keep the evidence, identify the cause and improve the next attempt.'],exercise,challenge:'Finish the exercise before you continue. Then show the result to someone who can give you honest feedback—or test it against reality yourself.',check:'What is the operator’s job in '+lower+'?',answer:'Turn the concept into a concrete action, gather evidence, verify the result and improve based on what reality shows you.',milestone:'You are done when you have a saved artifact or experiment, a result you can inspect, and one specific next action.',next:all[index+1]?slug(all[index+1].title):undefined}
+ const traps:Record<string,string>={'01':'Mistaking activity for value. Being busy is not the same as solving something people care about.','02':'Treating an AI answer as truth. Fluency is not proof.','03':'Falling in love with your idea before customers validate the problem.','04':'Building too much before a real person has tested the smallest useful version.','05':'Talking about yourself instead of the customer’s problem and desired outcome.','06':'Automating a broken or undocumented process.','07':'Adding complexity faster than the business can support it.','08':'Waiting to feel confident before taking the next responsible action.'}
+ return {title,module,quote:quote.q,quoteBy:quote.by,trap:traps[num],lead:'This lesson is designed to move you from knowing a concept to using it. '+principle,principle,examples:['A weak approach treats '+lower+' as an idea to admire. A strong approach turns it into a decision, artifact or experiment.','If the first attempt fails, that is information. Keep the evidence, identify the cause and improve the next attempt.'],exercise,challenge:'Finish the exercise before you continue. Then show the result to someone who can give you honest feedback—or test it against reality yourself.',check:'What is the operator’s job in '+lower+'?',answer:'Turn the concept into a concrete action, gather evidence, verify the result and improve based on what reality shows you.',milestone:'You are done when you have a saved artifact or experiment, a result you can inspect, and one specific next action.',next:all[index+1]?slug(all[index+1].title):undefined}
 }
 const custom:Record<string,Partial<Lesson>>={
 'money-follows-value':{lead:'If you remember one thing from this course, remember this: money is a scoreboard for value exchanged—not a reward for wanting it badly.',principle:'Stop asking “How can I make money?” Start asking “What valuable outcome can I create for someone else?”',exercise:'List five situations where someone is already spending money to solve a problem. Write the outcome they are actually buying.',challenge:'Find one person or business today and ask what costs them time, money or stress every week. Do not pitch anything.',milestone:'You are done when you have five paid problems and one customer conversation written down.'},
